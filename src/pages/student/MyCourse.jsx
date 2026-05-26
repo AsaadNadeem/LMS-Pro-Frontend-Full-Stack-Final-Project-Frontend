@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import {
   Container,
@@ -6,10 +5,9 @@ import {
   Col,
   Card,
   Button,
-  Alert,
   Badge,
   ProgressBar,
-  Form
+  Form,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -17,10 +15,8 @@ import Loader from "../../components/common/Loader";
 import { getMyCourses } from "../../api/enrollment.api";
 
 const MyCourses = () => {
-
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
 
@@ -31,11 +27,8 @@ const MyCourses = () => {
   }, []);
 
   const fetchMyCourses = async () => {
-
     try {
-
       setLoading(true);
-
       const response = await getMyCourses();
 
       const enrollments = response?.data?.data || [];
@@ -47,34 +40,25 @@ const MyCourses = () => {
       }));
 
       setCourses(extractedCourses);
-
     } catch (error) {
-
       toast.error(
         error?.response?.data?.message ||
-        "Failed to fetch enrolled courses"
+          "Failed to fetch enrolled courses"
       );
-
       setCourses([]);
-
     } finally {
-
       setLoading(false);
-
     }
-
   };
 
   if (loading) {
-    return <Loader message="Fetching your enrolled courses..." />;
+    return <Loader message="Loading your learning space..." />;
   }
 
-  /* ===== FILTER COURSES ===== */
-
   const filteredCourses = courses.filter((course) => {
-
-    const matchSearch =
-      course.title.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = course.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
 
     if (filter === "completed") {
       return matchSearch && course.progress === 100;
@@ -85,186 +69,202 @@ const MyCourses = () => {
     }
 
     return matchSearch;
-
   });
 
   return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg,#0f172a,#111827,#0f172a)",
+        paddingTop: "40px",
+        paddingBottom: "60px",
+      }}
+    >
+      <Container>
 
-    <Container className="py-5">
+        {/* ===== HEADER ===== */}
+        <div className="d-flex justify-content-between align-items-center mb-4 text-white">
+          <div>
+            <h2 className="fw-bold mb-1">📚 Your Learning Space</h2>
+            <p style={{ opacity: 0.7 }}>
+              Continue learning where you left off
+            </p>
+          </div>
 
-      {/* ===== Header ===== */}
+          <Badge bg="light" text="dark" className="px-3 py-2 rounded-pill">
+            {courses.length} Enrolled
+          </Badge>
+        </div>
 
-      <div className="d-flex justify-content-between align-items-center mb-4">
-
-        <h2 className="fw-bold">
-          🎓 My Learning Dashboard
-        </h2>
-
-        <Badge bg="dark" className="px-3 py-2">
-          {courses.length} Courses
-        </Badge>
-
-      </div>
-
-      {/* ===== Search + Filter ===== */}
-
-      <Row className="mb-4">
-
-        <Col md={6}>
-
-          <Form.Control
-            placeholder="Search your courses..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-
-        </Col>
-
-        <Col md={3}>
-
-          <Form.Select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-
-            <option value="all">All Courses</option>
-            <option value="progress">In Progress</option>
-            <option value="completed">Completed</option>
-
-          </Form.Select>
-
-        </Col>
-
-      </Row>
-
-      {/* ===== Empty State ===== */}
-
-      {filteredCourses.length === 0 ? (
-
-        <Alert variant="info" className="text-center">
-
-          No matching courses found.
-
-        </Alert>
-
-      ) : (
-
-        <Row className="g-4">
-
-          {filteredCourses.map((course) => (
-
-            <Col lg={4} md={6} key={course.enrollmentId}>
-
-              <Card className="border-0 shadow-lg h-100 rounded-4">
-
-                {/* Course Image */}
-
-                <Card.Img
-                  variant="top"
-                  src={
-                    course.image ||
-                    "https://img.freepik.com/free-vector/online-certification-illustration_23-2148575636.jpg"
-                  }
+        {/* ===== SEARCH + FILTER BAR ===== */}
+        <Card
+          className="mb-4 border-0"
+          style={{
+            background: "rgba(255,255,255,0.08)",
+            backdropFilter: "blur(10px)",
+            borderRadius: "14px",
+          }}
+        >
+          <Card.Body>
+            <Row className="g-3">
+              <Col md={7}>
+                <Form.Control
+                  placeholder="Search your courses..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   style={{
-                    height: "180px",
-                    objectFit: "cover"
+                    background: "rgba(255,255,255,0.1)",
+                    border: "none",
+                    color: "white",
                   }}
                 />
+              </Col>
 
-                <Card.Body className="d-flex flex-column">
+              <Col md={3}>
+                <Form.Select
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  style={{
+                    background: "rgba(255,255,255,0.1)",
+                    border: "none",
+                    color: "black",
+                  }}
+                >
+                  <option value="all">All Courses</option>
+                  <option value="progress">In Progress</option>
+                  <option value="completed">Completed</option>
+                </Form.Select>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
 
-                  {/* Title */}
+        {/* ===== EMPTY STATE ===== */}
+        {filteredCourses.length === 0 ? (
+          <Card
+            className="text-center p-5 border-0"
+            style={{
+              background: "rgba(255,255,255,0.08)",
+              color: "white",
+              borderRadius: "16px",
+            }}
+          >
+            <h5>No courses found</h5>
+            <p style={{ opacity: 0.7 }}>
+              Try adjusting your search or filters
+            </p>
+          </Card>
+        ) : (
+          <Row className="g-4">
 
-                  <Card.Title className="fw-semibold">
+            {filteredCourses.map((course) => (
+              <Col lg={4} md={6} key={course.enrollmentId}>
 
-                    {course.title}
+                <Card
+                  className="border-0 h-100"
+                  style={{
+                    background: "rgba(255,255,255,0.08)",
+                    backdropFilter: "blur(12px)",
+                    borderRadius: "18px",
+                    color: "white",
+                    transition: "0.3s",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.transform =
+                      "translateY(-8px)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform =
+                      "translateY(0px)")
+                  }
+                >
 
-                  </Card.Title>
+                  {/* IMAGE */}
+                  <Card.Img
+                    src={
+                      course.image ||
+                      "https://img.freepik.com/free-vector/online-certification-illustration_23-2148575636.jpg"
+                    }
+                    style={{
+                      height: "170px",
+                      objectFit: "cover",
+                      borderTopLeftRadius: "18px",
+                      borderTopRightRadius: "18px",
+                    }}
+                  />
 
-                  {/* Instructor */}
+                  <Card.Body className="d-flex flex-column">
 
-                  <small className="text-muted mb-2">
+                    {/* TITLE */}
+                    <h5 className="fw-bold">{course.title}</h5>
 
-                    Instructor:{" "}
-                    <strong>
-                      {course.instructor?.name || "Unknown"}
-                    </strong>
+                    {/* INSTRUCTOR */}
+                    <small style={{ opacity: 0.7 }}>
+                      Instructor:{" "}
+                      <strong>
+                        {course.instructor?.name || "Unknown"}
+                      </strong>
+                    </small>
 
-                  </small>
+                    {/* DESCRIPTION */}
+                    <p
+                      style={{ opacity: 0.75, fontSize: "0.9rem" }}
+                      className="flex-grow-1 mt-2"
+                    >
+                      {course.description
+                        ? course.description.slice(0, 90) + "..."
+                        : "No description available."}
+                    </p>
 
-                  {/* Description */}
+                    {/* PROGRESS */}
+                    <div className="mb-2">
+                      <div className="d-flex justify-content-between">
+                        <small>Progress</small>
+                        <small>{course.progress}%</small>
+                      </div>
 
-                  <Card.Text className="text-muted flex-grow-1">
+                      <ProgressBar
+                        now={course.progress}
+                        variant={
+                          course.progress === 100
+                            ? "success"
+                            : "info"
+                        }
+                      />
+                    </div>
 
-                    {course.description
-                      ? course.description.length > 90
-                        ? course.description.substring(0, 90) + "..."
-                        : course.description
-                      : "No description available."}
+                    {/* FOOTER */}
+                    <div className="d-flex justify-content-between align-items-center mt-3">
 
-                  </Card.Text>
+                      <span className="fw-bold text-info">
+                        Rs. {course.price || 0}
+                      </span>
 
-                  {/* Progress */}
-
-                  <div className="mb-3">
-
-                    <div className="d-flex justify-content-between">
-
-                      <small>Progress</small>
-
-                      <small className="fw-semibold">
-                        {course.progress}%
-                      </small>
+                      <Button
+                        size="sm"
+                        variant="light"
+                        className="rounded-pill fw-semibold px-3"
+                        onClick={() =>
+                          navigate(`/lesson/${course._id}`)
+                        }
+                      >
+                        Continue
+                      </Button>
 
                     </div>
 
-                    <ProgressBar
-                      now={course.progress}
-                      variant="success"
-                    />
+                  </Card.Body>
+                </Card>
 
-                  </div>
+              </Col>
+            ))}
 
-                  {/* Footer */}
+          </Row>
+        )}
 
-                  <div className="d-flex justify-content-between align-items-center mt-auto">
-
-                    <span className="fw-bold text-primary">
-
-                      Rs. {course.price || 0}
-
-                    </span>
-
-                    <Button
-                      variant="dark"
-                      size="sm"
-                      onClick={() =>
-                        navigate(`/lesson/${course._id}`)
-                      }
-                    >
-
-                      Continue Learning
-
-                    </Button>
-
-                  </div>
-
-                </Card.Body>
-
-              </Card>
-
-            </Col>
-
-          ))}
-
-        </Row>
-
-      )}
-
-    </Container>
-
+      </Container>
+    </div>
   );
-
 };
 
 export default MyCourses;

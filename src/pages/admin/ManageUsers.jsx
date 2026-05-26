@@ -1,13 +1,30 @@
-
 import { useEffect, useState } from "react";
-import { Container, Table, Button, Badge, Card } from "react-bootstrap";
-import { getAllUsers, deleteUser } from "../../api/admin.api";
+
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Badge,
+  Spinner,
+} from "react-bootstrap";
+
+import {
+  getAllUsers,
+  deleteUser,
+} from "../../api/admin.api";
+
 import { toast } from "react-toastify";
+
 import Loader from "../../components/common/Loader";
 
 const ManageUsers = () => {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [users, setUsers] =
+    useState([]);
+
+  const [loading, setLoading] =
+    useState(true);
 
   useEffect(() => {
     fetchUsers();
@@ -15,132 +32,267 @@ const ManageUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const { data } = await getAllUsers();
+      const { data } =
+        await getAllUsers();
+
       setUsers(data.data);
     } catch {
-      toast.error("Failed to fetch users");
+      toast.error(
+        "Failed to fetch users"
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this user?")) return;
+  const handleDelete = async (
+    id
+  ) => {
+    if (
+      !window.confirm(
+        "Delete this user?"
+      )
+    )
+      return;
 
     try {
       await deleteUser(id);
-      toast.success("User deleted successfully");
+
+      toast.success(
+        "User deleted successfully"
+      );
+
       fetchUsers();
     } catch {
-      toast.error("Delete failed");
+      toast.error(
+        "Delete failed"
+      );
     }
   };
 
-  if (loading) return <Loader message="Loading users..." />;
+  if (loading)
+    return (
+      <Loader message="Loading users..." />
+    );
 
   return (
-    <div style={{ background: "#f6f8fb", minHeight: "100vh" }}>
-      <Container className="py-5">
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(to bottom right,#0f172a,#111827,#1e293b)",
+        padding: "40px 0",
+      }}
+    >
+      <Container>
+        {/* HEADER */}
 
-        {/* Header */}
-        <div className="mb-4">
-          <h3 className="fw-bold">👥 Manage Users</h3>
-          <p className="text-muted">
-            View and manage all platform users
-          </p>
+        <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-5">
+          <div>
+            <h1 className="fw-bold text-white mb-2">
+              User Management
+            </h1>
+
+            <p
+              style={{
+                color: "#94a3b8",
+              }}
+            >
+              Manage platform
+              students,
+              instructors, and
+              administrators.
+            </p>
+          </div>
+
+          <Badge
+            bg="primary"
+            className="px-4 py-3 fs-6 rounded-pill"
+          >
+            {users.length} Users
+          </Badge>
         </div>
 
-        <Card className="shadow-lg border-0 rounded-4">
-          <Card.Body>
+        {/* EMPTY STATE */}
 
-            {users.length === 0 ? (
-              <div className="text-center py-5">
-                <h5>No users found</h5>
-                <p className="text-muted">
-                  There are currently no registered users.
-                </p>
-              </div>
-            ) : (
+        {users.length === 0 ? (
+          <Card
+            className="border-0 text-center p-5"
+            style={{
+              background:
+                "rgba(255,255,255,0.06)",
+              backdropFilter:
+                "blur(14px)",
+              borderRadius:
+                "24px",
+              color: "white",
+            }}
+          >
+            <h4 className="fw-bold mb-3">
+              No Users Found
+            </h4>
 
-              <Table hover responsive className="align-middle">
+            <p
+              style={{
+                color: "#cbd5e1",
+              }}
+            >
+              There are currently
+              no registered users
+              on the platform.
+            </p>
+          </Card>
+        ) : (
+          <Row className="g-4">
+            {users.map((user) => (
+              <Col
+                lg={4}
+                md={6}
+                key={user?._id}
+              >
+                <Card
+                  className="border-0 h-100 user-card"
+                  style={{
+                    background:
+                      "rgba(255,255,255,0.06)",
+                    backdropFilter:
+                      "blur(14px)",
+                    borderRadius:
+                      "26px",
+                    overflow:
+                      "hidden",
+                  }}
+                >
+                  <Card.Body className="p-4 d-flex flex-column">
+                    {/* TOP */}
 
-                <thead>
-                  <tr>
-                    <th>User</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th className="text-center">Action</th>
-                  </tr>
-                </thead>
+                    <div className="d-flex justify-content-between align-items-start mb-4">
+                      {/* AVATAR */}
 
-                <tbody>
-                  {users.map((user) => (
+                      <div className="d-flex align-items-center gap-3">
+                        <div
+                          style={{
+                            width:
+                              "60px",
+                            height:
+                              "60px",
+                            borderRadius:
+                              "20px",
+                            background:
+                              "linear-gradient(to bottom right,#3b82f6,#06b6d4)",
+                            display:
+                              "flex",
+                            alignItems:
+                              "center",
+                            justifyContent:
+                              "center",
+                            fontSize:
+                              "1.5rem",
+                            fontWeight:
+                              "bold",
+                            color:
+                              "white",
+                          }}
+                        >
+                          {user.name
+                            ?.charAt(
+                              0
+                            )
+                            .toUpperCase()}
+                        </div>
 
-                    <tr key={user?._id}>
+                        <div>
+                          <h5 className="fw-bold text-white mb-1">
+                            {
+                              user.name
+                            }
+                          </h5>
 
-                      {/* Name with Avatar */}
-                      <td>
-                        <div className="d-flex align-items-center gap-2">
-                          <div
+                          <small
                             style={{
-                              width: "35px",
-                              height: "35px",
-                              borderRadius: "50%",
-                              background: "#e9ecef",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              fontWeight: "bold",
+                              color:
+                                "#94a3b8",
                             }}
                           >
-                            {user.name?.charAt(0).toUpperCase()}
-                          </div>
-
-                          {user.name}
+                            {
+                              user.email
+                            }
+                          </small>
                         </div>
-                      </td>
+                      </div>
+                    </div>
 
-                      <td>{user.email}</td>
+                    {/* ROLE */}
 
-                      {/* Role Badge */}
-                      <td>
-                        {user.role === "admin" && (
-                          <Badge bg="danger">Admin</Badge>
-                        )}
-
-                        {user.role === "instructor" && (
-                          <Badge bg="success">Instructor</Badge>
-                        )}
-
-                        {user.role === "student" && (
-                          <Badge bg="primary">Student</Badge>
-                        )}
-                      </td>
-
-                      {/* Action */}
-                      <td className="text-center">
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
-                          onClick={() => handleDelete(user?._id)}
+                    <div className="mb-4">
+                      {user.role ===
+                        "admin" && (
+                        <Badge
+                          bg="danger"
+                          className="px-3 py-2 rounded-pill"
                         >
-                          Delete
-                        </Button>
-                      </td>
+                          Administrator
+                        </Badge>
+                      )}
 
-                    </tr>
+                      {user.role ===
+                        "instructor" && (
+                        <Badge
+                          bg="success"
+                          className="px-3 py-2 rounded-pill"
+                        >
+                          Instructor
+                        </Badge>
+                      )}
 
-                  ))}
-                </tbody>
+                      {user.role ===
+                        "student" && (
+                        <Badge
+                          bg="primary"
+                          className="px-3 py-2 rounded-pill"
+                        >
+                          Student
+                        </Badge>
+                      )}
+                    </div>
 
-              </Table>
+                    {/* FOOTER */}
 
-            )}
-
-          </Card.Body>
-        </Card>
-
+                    <div className="mt-auto">
+                      <Button
+                        variant="outline-danger"
+                        className="w-100 rounded-pill fw-semibold"
+                        onClick={() =>
+                          handleDelete(
+                            user?._id
+                          )
+                        }
+                      >
+                        Delete User
+                      </Button>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        )}
       </Container>
+
+      {/* CUSTOM STYLE */}
+
+      <style>
+        {`
+        .user-card{
+          transition:0.3s ease;
+        }
+
+        .user-card:hover{
+          transform:translateY(-10px);
+          box-shadow:0 25px 50px rgba(0,0,0,0.3);
+        }
+        `}
+      </style>
     </div>
   );
 };

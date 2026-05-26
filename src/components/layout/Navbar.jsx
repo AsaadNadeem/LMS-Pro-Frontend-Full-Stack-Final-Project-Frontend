@@ -1,61 +1,110 @@
-
 import {
   Navbar,
   Nav,
   Container,
   Button,
-  NavDropdown
+  NavDropdown,
 } from "react-bootstrap";
+
 import { useContext } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+
+import {
+  useNavigate,
+  Link,
+  useLocation,
+} from "react-router-dom";
+
 import { AuthContext } from "../../context/AuthContext";
 
 const AppNavbar = () => {
-  const { user, handleLogout } = useContext(AuthContext);
+  const { user, handleLogout } =
+    useContext(AuthContext);
+
   const navigate = useNavigate();
+
   const location = useLocation();
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) =>
+    location.pathname === path;
 
   return (
     <Navbar
-      bg="dark"
-      variant="dark"
       expand="lg"
       sticky="top"
-      className="shadow"
       style={{
-        paddingTop: "12px",
-        paddingBottom: "12px",
-        backdropFilter: "blur(10px)"
+        background: "rgba(15, 23, 42, 0.75)",
+        backdropFilter: "blur(14px)",
+        borderBottom:
+          "1px solid rgba(255,255,255,0.08)",
+        paddingTop: "14px",
+        paddingBottom: "14px",
+        zIndex: "999",
       }}
     >
       <Container>
+        {/* BRAND */}
 
-        {/* ===== Brand ===== */}
         <Navbar.Brand
           as={Link}
           to="/"
+          className="d-flex align-items-center"
           style={{
-            fontWeight: "700",
-            fontSize: "20px",
-            letterSpacing: "1px"
+            fontWeight: "800",
+            fontSize: "1.5rem",
+            letterSpacing: "1px",
+            color: "white",
           }}
         >
-          🎓 <span style={{ color: "#70d6c7" }}>LMS</span> Pro
+          <div
+            style={{
+              width: "42px",
+              height: "42px",
+              borderRadius: "14px",
+              background:
+                "linear-gradient(to right, #2563eb, #38bdf8)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginRight: "12px",
+              fontSize: "1.2rem",
+              color: "white",
+            }}
+          >
+            🎓
+          </div>
+
+          <span>
+            LMS{" "}
+            <span style={{ color: "#38bdf8" }}>
+              Nexus
+            </span>
+          </span>
         </Navbar.Brand>
 
-        <Navbar.Toggle aria-controls="main-navbar" />
+        <Navbar.Toggle
+          aria-controls="main-navbar"
+          style={{
+            background: "white",
+            border: "none",
+          }}
+        />
 
         <Navbar.Collapse id="main-navbar">
+          {/* LEFT LINKS */}
 
-          {/* ================= LEFT SIDE ================= */}
-          <Nav className="me-auto align-items-center">
-
+          <Nav className="me-auto ms-4 align-items-lg-center">
             <Nav.Link
               as={Link}
               to="/"
-              className={isActive("/") ? "fw-bold text-info" : "fw-medium"}
+              style={{
+                color: isActive("/")
+                  ? "#38bdf8"
+                  : "#e2e8f0",
+                fontWeight: isActive("/")
+                  ? "700"
+                  : "500",
+                marginRight: "14px",
+              }}
             >
               Home
             </Nav.Link>
@@ -63,7 +112,15 @@ const AppNavbar = () => {
             <Nav.Link
               as={Link}
               to="/about"
-              className={isActive("/about") ? "fw-bold text-info" : "fw-medium"}
+              style={{
+                color: isActive("/about")
+                  ? "#38bdf8"
+                  : "#e2e8f0",
+                fontWeight: isActive("/about")
+                  ? "700"
+                  : "500",
+                marginRight: "14px",
+              }}
             >
               About
             </Nav.Link>
@@ -71,28 +128,47 @@ const AppNavbar = () => {
             <Nav.Link
               as={Link}
               to="/courses"
-              className={isActive("/courses") ? "fw-bold text-info" : "fw-medium"}
+              style={{
+                color: isActive("/courses")
+                  ? "#38bdf8"
+                  : "#e2e8f0",
+                fontWeight: isActive("/courses")
+                  ? "700"
+                  : "500",
+                marginRight: "14px",
+              }}
             >
               Courses
             </Nav.Link>
 
-            {/* ===== Instructor Panel ===== */}
+            {/* INSTRUCTOR PANEL */}
+
             {user?.role === "instructor" && (
               <NavDropdown
-                title="Instructor Panel"
+                title="Instructor"
                 id="instructor-dropdown"
+                menuVariant="dark"
               >
-                <NavDropdown.Item as={Link} to="/instructor/dashboard">
+                <NavDropdown.Item
+                  as={Link}
+                  to="/instructor/dashboard"
+                >
                   📊 Dashboard
                 </NavDropdown.Item>
 
                 <NavDropdown.Divider />
 
-                <NavDropdown.Item as={Link} to="/create-course">
+                <NavDropdown.Item
+                  as={Link}
+                  to="/create-course"
+                >
                   ➕ Create Course
                 </NavDropdown.Item>
 
-                <NavDropdown.Item as={Link} to="/courses">
+                <NavDropdown.Item
+                  as={Link}
+                  to="/courses"
+                >
                   📚 My Courses
                 </NavDropdown.Item>
 
@@ -100,7 +176,7 @@ const AppNavbar = () => {
                   as={Link}
                   to="/instructor/manage-students"
                 >
-                  👨‍🎓 Manage Students later will be handle
+                  👨‍🎓 Manage Students
                 </NavDropdown.Item>
 
                 <NavDropdown.Divider />
@@ -109,101 +185,160 @@ const AppNavbar = () => {
                   as={Link}
                   to="/instructor/analytics"
                 >
-                  📈 Analytics later will be handle
+                  📈 Analytics
                 </NavDropdown.Item>
               </NavDropdown>
             )}
 
-            {/* ===== Admin Panel ===== */}
+            {/* ADMIN PANEL */}
+
             {user?.role === "admin" && (
-              <NavDropdown title="Admin Panel" id="admin-dropdown">
-                <NavDropdown.Item as={Link} to="/admin/dashboard">
+              <NavDropdown
+                title="Admin"
+                id="admin-dropdown"
+                menuVariant="dark"
+              >
+                <NavDropdown.Item
+                  as={Link}
+                  to="/admin/dashboard"
+                >
                   Dashboard
                 </NavDropdown.Item>
 
-                <NavDropdown.Item as={Link} to="/admin/users">
+                <NavDropdown.Item
+                  as={Link}
+                  to="/admin/users"
+                >
                   Manage Users
                 </NavDropdown.Item>
 
-                <NavDropdown.Item as={Link} to="/admin/manage-courses">
+                <NavDropdown.Item
+                  as={Link}
+                  to="/admin/manage-courses"
+                >
                   Manage Courses
                 </NavDropdown.Item>
 
-                <NavDropdown.Item as={Link} to="/admin/create-instructor">
+                <NavDropdown.Item
+                  as={Link}
+                  to="/admin/create-instructor"
+                >
                   Create Instructor
                 </NavDropdown.Item>
 
-                <NavDropdown.Item as={Link} to="/admin/analytics">
+                <NavDropdown.Item
+                  as={Link}
+                  to="/admin/analytics"
+                >
                   Analytics
                 </NavDropdown.Item>
               </NavDropdown>
             )}
-
           </Nav>
 
-          {/* ================= RIGHT SIDE ================= */}
-          <Nav className="align-items-center">
+          {/* RIGHT SIDE */}
 
+          <Nav className="align-items-lg-center">
             {!user && (
               <>
-                <Nav.Link as={Link} to="/login" className="fw-medium">
+                <Nav.Link
+                  as={Link}
+                  to="/login"
+                  style={{
+                    color: "#e2e8f0",
+                    fontWeight: "500",
+                    marginRight: "10px",
+                  }}
+                >
                   Login
                 </Nav.Link>
 
                 <Button
-                  variant="primary"
-                  className="ms-2 px-4 rounded-pill fw-medium"
-                  onClick={() => navigate("/register")}
+                  onClick={() =>
+                    navigate("/register")
+                  }
+                  style={{
+                    background:
+                      "linear-gradient(to right, #2563eb, #38bdf8)",
+                    border: "none",
+                    borderRadius: "14px",
+                    padding: "10px 22px",
+                    fontWeight: "600",
+                  }}
                 >
-                  Register
+                  Get Started
                 </Button>
               </>
             )}
 
             {user && (
               <>
-                {/* Student Quick Access */}
+                {/* STUDENT QUICK ACCESS */}
+
                 {user.role === "student" && (
                   <Nav.Link
                     as={Link}
                     to="/my-courses"
-                    className="fw-medium"
+                    style={{
+                      color: "#e2e8f0",
+                      fontWeight: "500",
+                      marginRight: "10px",
+                    }}
                   >
                     My Courses
                   </Nav.Link>
                 )}
 
-                {/* User Dropdown */}
+                {/* USER DROPDOWN */}
+
                 <NavDropdown
                   align="end"
                   id="user-dropdown"
+                  menuVariant="dark"
                   title={
-                    <span className="d-inline-flex align-items-center">
-                      <span
+                    <span className="d-inline-flex align-items-center text-white">
+                      <div
                         style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "50%",
-                          background: "#2f7d8c",
+                          width: "38px",
+                          height: "38px",
+                          borderRadius: "14px",
+                          background:
+                            "linear-gradient(to right, #2563eb, #38bdf8)",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          fontSize: "14px",
-                          marginRight: "6px"
+                          fontWeight: "700",
+                          marginRight: "10px",
+                          color: "white",
                         }}
                       >
-                        {user.name?.charAt(0).toUpperCase()}
+                        {user.name
+                          ?.charAt(0)
+                          .toUpperCase()}
+                      </div>
+
+                      <span
+                        style={{
+                          fontWeight: "600",
+                        }}
+                      >
+                        {user.name}
                       </span>
-                      {user.name}
                     </span>
                   }
                 >
-                  <NavDropdown.Item as={Link} to="/update-user-details">
-                    Update Profile
+                  <NavDropdown.Item
+                    as={Link}
+                    to="/update-user-details"
+                  >
+                    👤 Update Profile
                   </NavDropdown.Item>
 
-                  <NavDropdown.Item as={Link} to="/change-password">
-                    Change Password
+                  <NavDropdown.Item
+                    as={Link}
+                    to="/change-password"
+                  >
+                    🔒 Change Password
                   </NavDropdown.Item>
 
                   <NavDropdown.Divider />
@@ -212,14 +347,12 @@ const AppNavbar = () => {
                     onClick={handleLogout}
                     className="text-danger"
                   >
-                    Logout
+                    🚪 Logout
                   </NavDropdown.Item>
                 </NavDropdown>
               </>
             )}
-
           </Nav>
-
         </Navbar.Collapse>
       </Container>
     </Navbar>

@@ -1,164 +1,60 @@
- 
-// import { useEffect, useState } from "react";
-// import { Container, Table, Button, Card, Badge, Row, Col } from "react-bootstrap";
-// import { getAllCourses, deleteCourse } from "../../api/course.api";
-// import { toast } from "react-toastify";
-// import Loader from "../../components/common/Loader";
-
-// const ManageCourses = () => {
-//   const [courses, setCourses] = useState([]);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     fetchCourses();
-//   }, []);
-
-//   const fetchCourses = async () => {
-//     try {
-//       const { data } = await getAllCourses();
-//       setCourses(data.data);
-//     } catch {
-//       toast.error("Failed to fetch courses");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleDelete = async (id) => {
-//     if (!window.confirm("Delete this course?")) return;
-
-//     try {
-//       await deleteCourse(id);
-//       toast.success("Course deleted");
-//       fetchCourses();
-//     } catch {
-//       toast.error("Delete failed");
-//     }
-//   };
-
-//   if (loading) return <Loader message="Loading courses..." />;
-
-//   return (
-//     <Container fluid className="py-5 px-lg-5">
-      
-//       {/* Page Header */}
-//       <Row className="mb-4">
-//         <Col>
-//           <div className="p-4 rounded-4 shadow-sm bg-gradient bg-primary text-white">
-//             <h2 className="fw-bold mb-1">Manage Courses</h2>
-//             <p className="mb-0 opacity-75">
-//               View, manage and remove courses from the platform
-//             </p>
-//           </div>
-//         </Col>
-//       </Row>
-
-//       {/* Courses Table Card */}
-//       <Card className="border-0 shadow-lg rounded-4">
-//         <Card.Body className="p-4">
-
-//           {courses.length === 0 ? (
-//             <div className="text-center py-5">
-//               <h5 className="fw-semibold text-muted">No Courses Found</h5>
-//               <p className="text-muted mb-0">
-//                 Courses will appear here once instructors create them.
-//               </p>
-//             </div>
-//           ) : (
-//             <Table
-//               responsive
-//               hover
-//               className="align-middle mb-0"
-//               style={{ borderCollapse: "separate", borderSpacing: "0 10px" }}
-//             >
-//               <thead>
-//                 <tr className="text-secondary">
-//                   <th className="ps-3">Title</th>
-//                   <th>Category</th>
-//                   <th>Instructor</th>
-//                   <th className="text-center">Action</th>
-//                 </tr>
-//               </thead>
-
-//               <tbody>
-//                 {courses.map((course) => (
-//                   <tr
-//                     key={course._id}
-//                     className="bg-white shadow-sm rounded-3"
-//                     style={{ borderRadius: "10px" }}
-//                   >
-//                     <td className="ps-3 fw-semibold">{course.title}</td>
-
-//                     <td>
-//                       <Badge bg="info" pill className="px-3 py-2">
-//                         {course.category}
-//                       </Badge>
-//                     </td>
-
-//                     <td>
-//                       <Badge bg="secondary" pill className="px-3 py-2">
-//                         {course.instructor?.name || "N/A"}
-//                       </Badge>
-//                     </td>
-
-//                     <td className="text-center">
-//                       <Button
-//                         variant="outline-danger"
-//                         size="sm"
-//                         className="px-3 fw-semibold"
-//                         onClick={() => handleDelete(course._id)}
-//                       >
-//                         🗑 Delete
-//                       </Button>
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </Table>
-//           )}
-
-//         </Card.Body>
-//       </Card>
-//     </Container>
-//   );
-// };
-
-// export default ManageCourses;
-
-
 import { useEffect, useState } from "react";
+
 import {
   Container,
-  Table,
+  Row,
+  Col,
+  Card,
   Button,
   Spinner,
   Modal,
   Alert,
+  Badge,
 } from "react-bootstrap";
-import { getAllCourses, deleteCourse } from "../../api/course.api";
+
+import {
+  getAllCourses,
+  deleteCourse,
+} from "../../api/course.api";
+
 import { toast } from "react-toastify";
 
 const ManageCourses = () => {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [courses, setCourses] =
+    useState([]);
 
-  const [showModal, setShowModal] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [loading, setLoading] =
+    useState(true);
 
-  // 🔥 Fetch Courses (FIXED)
+  const [showModal, setShowModal] =
+    useState(false);
+
+  const [selectedCourse,
+    setSelectedCourse] =
+    useState(null);
+
+  // FETCH COURSES
+
   const fetchCourses = async () => {
     try {
-      const res = await getAllCourses();
+      const res =
+        await getAllCourses();
 
-      console.log("API Response:", res.data);
-
-      // ✅ SAFE DATA EXTRACTION
       const courseData =
-        res.data?.courses || res.data?.data || res.data || [];
+        res.data?.courses ||
+        res.data?.data ||
+        res.data ||
+        [];
 
-      setCourses(Array.isArray(courseData) ? courseData : []);
+      setCourses(
+        Array.isArray(courseData)
+          ? courseData
+          : []
+      );
     } catch (error) {
-      toast.error("Failed to fetch courses");
+      toast.error(
+        "Failed to fetch courses"
+      );
     } finally {
       setLoading(false);
     }
@@ -168,22 +64,33 @@ const ManageCourses = () => {
     fetchCourses();
   }, []);
 
-  // 🔥 Open Modal
-  const handleDeleteClick = (course) => {
+  // OPEN DELETE MODAL
+
+  const handleDeleteClick = (
+    course
+  ) => {
     setSelectedCourse(course);
     setShowModal(true);
   };
 
-  // 🔥 Confirm Delete
+  // CONFIRM DELETE
+
   const confirmDelete = async () => {
     try {
-      await deleteCourse(selectedCourse._id);
+      await deleteCourse(
+        selectedCourse._id
+      );
 
-      toast.success("Course deleted successfully");
+      toast.success(
+        "Course deleted successfully"
+      );
 
-      // ✅ Optimistic UI Update
       setCourses((prev) =>
-        prev.filter((c) => c._id !== selectedCourse._id)
+        prev.filter(
+          (c) =>
+            c._id !==
+            selectedCourse._id
+        )
       );
     } catch (error) {
       toast.error("Delete failed");
@@ -193,94 +100,262 @@ const ManageCourses = () => {
   };
 
   return (
-    <Container className="mt-4">
-      <h2 className="fw-bold mb-4">Manage Courses</h2>
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(to bottom right,#0f172a,#111827,#1e293b)",
+        padding: "40px 0",
+      }}
+    >
+      <Container>
+        {/* HEADER */}
 
-      {/* 🔥 Loading State */}
-      {loading ? (
-        <div className="text-center mt-5">
-          <Spinner animation="border" />
-        </div>
-      ) : !Array.isArray(courses) || courses.length === 0 ? (
-        /* 🔥 Empty State */
-        <Alert variant="info" className="text-center">
-          No courses found. Create one to get started.
-        </Alert>
-      ) : (
-        <Table
-          striped
-          bordered
-          hover
-          responsive
-          className="shadow-sm align-middle"
-        >
-          <thead className="table-dark">
-            <tr>
-              <th>#</th>
-              <th>Title</th>
-              <th>Instructor</th>
-              <th>Price</th>
-              <th style={{ width: "120px" }}>Actions</th>
-            </tr>
-          </thead>
+        <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-5">
+          <div>
+            <h1
+              className="fw-bold text-white mb-2"
+            >
+              Manage Courses
+            </h1>
 
-          <tbody>
-            {courses.map((course, index) => (
-              <tr key={course._id}>
-                <td>{index + 1}</td>
+            <p
+              style={{
+                color: "#94a3b8",
+              }}
+            >
+              Monitor and manage all
+              LMS platform courses.
+            </p>
+          </div>
 
-                <td className="fw-semibold">{course.title}</td>
-
-                <td>{course?.instructor?.name || "N/A"}</td>
-
-                <td className="text-success fw-bold">
-                  RS{course.price || 0}
-                </td>
-
-                <td>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleDeleteClick(course)}
-                  >
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      )}
-
-      {/* 🔥 Delete Confirmation Modal */}
-      <Modal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Delete Course</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          Are you sure you want to delete{" "}
-          <strong>{selectedCourse?.title}</strong>?
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => setShowModal(false)}
+          <Badge
+            bg="primary"
+            className="px-4 py-3 fs-6 rounded-pill"
           >
-            Cancel
-          </Button>
+            {courses.length} Courses
+          </Badge>
+        </div>
 
-          <Button variant="danger" onClick={confirmDelete}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </Container>
+        {/* LOADING */}
+
+        {loading ? (
+          <div className="text-center py-5">
+            <Spinner
+              animation="border"
+              variant="light"
+            />
+          </div>
+        ) : !Array.isArray(courses) ||
+          courses.length === 0 ? (
+          <Alert
+            variant="light"
+            className="text-center border-0 shadow-sm"
+          >
+            No courses found.
+            Create one to get
+            started.
+          </Alert>
+        ) : (
+          <Row className="g-4">
+            {courses.map(
+              (course, index) => (
+                <Col
+                  lg={4}
+                  md={6}
+                  key={course._id}
+                >
+                  <Card
+                    className="border-0 h-100 course-card"
+                    style={{
+                      background:
+                        "rgba(255,255,255,0.06)",
+                      backdropFilter:
+                        "blur(16px)",
+                      borderRadius:
+                        "24px",
+                      overflow:
+                        "hidden",
+                    }}
+                  >
+                    {/* IMAGE */}
+
+                    <div
+                      style={{
+                        height: "200px",
+                        overflow:
+                          "hidden",
+                      }}
+                    >
+                      <Card.Img
+                        src={
+                          course.image ||
+                          "https://images.unsplash.com/photo-1516321318423-f06f85e504b3"
+                        }
+                        style={{
+                          height:
+                            "100%",
+                          objectFit:
+                            "cover",
+                        }}
+                      />
+                    </div>
+
+                    <Card.Body className="p-4 d-flex flex-column">
+                      {/* TOP */}
+
+                      <div className="mb-3 d-flex justify-content-between align-items-start">
+                        <Badge
+                          bg="info"
+                          className="px-3 py-2 rounded-pill"
+                        >
+                          Course #{index + 1}
+                        </Badge>
+
+                        <span
+                          className="fw-bold"
+                          style={{
+                            color:
+                              "#4ade80",
+                          }}
+                        >
+                          Rs{" "}
+                          {course.price ||
+                            0}
+                        </span>
+                      </div>
+
+                      {/* TITLE */}
+
+                      <h4
+                        className="fw-bold text-white mb-3"
+                      >
+                        {course.title}
+                      </h4>
+
+                      {/* DESCRIPTION */}
+
+                      <p
+                        style={{
+                          color:
+                            "#cbd5e1",
+                          lineHeight:
+                            "1.7",
+                          flexGrow: 1,
+                        }}
+                      >
+                        {course.description
+                          ? course.description.length >
+                            120
+                            ? course.description.substring(
+                                0,
+                                120
+                              ) +
+                              "..."
+                            : course.description
+                          : "No description available."}
+                      </p>
+
+                      {/* INSTRUCTOR */}
+
+                      <div
+                        className="mt-3 mb-4"
+                        style={{
+                          color:
+                            "#94a3b8",
+                        }}
+                      >
+                        👨‍🏫 Instructor:
+                        <strong className="ms-2 text-white">
+                          {course
+                            ?.instructor
+                            ?.name ||
+                            "N/A"}
+                        </strong>
+                      </div>
+
+                      {/* ACTION */}
+
+                      <Button
+                        variant="danger"
+                        className="rounded-pill fw-semibold py-2"
+                        onClick={() =>
+                          handleDeleteClick(
+                            course
+                          )
+                        }
+                      >
+                        Delete Course
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              )
+            )}
+          </Row>
+        )}
+
+        {/* DELETE MODAL */}
+
+        <Modal
+          show={showModal}
+          onHide={() =>
+            setShowModal(false)
+          }
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Delete Course
+            </Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            Are you sure you want
+            to permanently delete{" "}
+            <strong>
+              {
+                selectedCourse?.title
+              }
+            </strong>
+            ?
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() =>
+                setShowModal(false)
+              }
+            >
+              Cancel
+            </Button>
+
+            <Button
+              variant="danger"
+              onClick={confirmDelete}
+            >
+              Delete
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </Container>
+
+      {/* CUSTOM STYLE */}
+
+      <style>
+        {`
+        .course-card{
+          transition:0.3s ease;
+        }
+
+        .course-card:hover{
+          transform:translateY(-10px);
+          box-shadow:0 25px 45px rgba(0,0,0,0.25);
+        }
+        `}
+      </style>
+    </div>
   );
 };
 

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import {
   Container,
@@ -7,7 +6,6 @@ import {
   Card,
   Button,
   Badge,
-  Image
 } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +29,6 @@ const ManageCourses = () => {
       const instructorCourses = response?.data?.data || [];
       setCourses(instructorCourses);
     } catch (error) {
-      console.error(error);
       toast.error("Failed to fetch instructor courses");
     } finally {
       setLoading(false);
@@ -47,61 +44,93 @@ const ManageCourses = () => {
 
     try {
       await deleteCourse(courseId);
-
       toast.success("Course deleted successfully");
 
-      setCourses((prevCourses) =>
-        prevCourses.filter((course) => course._id !== courseId)
+      setCourses((prev) =>
+        prev.filter((c) => c._id !== courseId)
       );
-    } catch (error) {
-      console.error(error);
+    } catch {
       toast.error("Failed to delete course");
     }
   };
 
-  if (loading) return <Loader message="Loading courses..." />;
+  if (loading) return <Loader message="Loading your studio..." />;
 
   return (
-    <div style={{ background: "#f6f8fb", minHeight: "100vh" }}>
-      <Container className="py-5">
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg,#0f172a,#111827,#0f172a)",
+        paddingTop: "40px",
+        paddingBottom: "60px",
+      }}
+    >
+      <Container>
 
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h3 className="fw-bold">📚 Manage Courses</h3>
+        {/* ===== HEADER ===== */}
+        <div className="d-flex justify-content-between align-items-center mb-4 text-white">
+          <div>
+            <h2 className="fw-bold mb-1">🎬 Instructor Studio</h2>
+            <p style={{ opacity: 0.7 }}>
+              Manage, edit, and grow your courses
+            </p>
+          </div>
 
-          <Badge bg="dark">
+          <Badge bg="light" text="dark" className="px-3 py-2 rounded-pill">
             {courses.length} Courses
           </Badge>
         </div>
 
+        {/* ===== EMPTY STATE ===== */}
         {courses.length === 0 ? (
-
-          <div className="text-center py-5">
-            <h5>No courses found</h5>
-            <p className="text-muted">
-              You haven't created any courses yet.
+          <Card
+            className="text-center p-5 border-0"
+            style={{
+              background: "rgba(255,255,255,0.08)",
+              color: "white",
+              borderRadius: "16px",
+            }}
+          >
+            <h5>No courses yet</h5>
+            <p style={{ opacity: 0.7 }}>
+              Start creating your first course
             </p>
 
             <Button
-              variant="dark"
+              variant="light"
+              className="rounded-pill px-4 fw-semibold"
               onClick={() => navigate("/create-course")}
             >
-              Create Your First Course
+              + Create Course
             </Button>
-          </div>
-
+          </Card>
         ) : (
-
           <Row className="g-4">
 
             {courses.map((course) => (
-
               <Col md={6} lg={4} key={course._id}>
 
-                <Card className="border-0 shadow-lg h-100 rounded-4">
+                <Card
+                  className="border-0 h-100"
+                  style={{
+                    background: "rgba(255,255,255,0.08)",
+                    backdropFilter: "blur(12px)",
+                    borderRadius: "18px",
+                    color: "white",
+                    transition: "0.3s",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.transform =
+                      "translateY(-8px)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform =
+                      "translateY(0px)")
+                  }
+                >
 
-                  {/* Course Thumbnail (Image 1) */}
+                  {/* THUMBNAIL */}
                   <Card.Img
-                    variant="top"
                     src={
                       course.thumbnail ||
                       "https://img.freepik.com/free-vector/online-learning-concept-illustration_114360-4765.jpg"
@@ -109,70 +138,67 @@ const ManageCourses = () => {
                     style={{
                       height: "180px",
                       objectFit: "cover",
-                      borderTopLeftRadius: "16px",
-                      borderTopRightRadius: "16px"
+                      borderTopLeftRadius: "18px",
+                      borderTopRightRadius: "18px",
                     }}
                   />
 
                   <Card.Body className="d-flex flex-column">
 
-                    <Badge bg="secondary" className="mb-2">
+                    {/* CATEGORY */}
+                    <Badge bg="light" text="dark" className="mb-2">
                       {course.category || "Course"}
                     </Badge>
 
-                    <Card.Title className="fw-semibold">
-                      {course.title}
-                    </Card.Title>
+                    {/* TITLE */}
+                    <h5 className="fw-bold">{course.title}</h5>
 
-                    <Card.Text className="text-muted flex-grow-1">
-                      {course.description?.substring(0, 90)}...
-                    </Card.Text>
+                    {/* DESCRIPTION */}
+                    <p
+                      style={{ opacity: 0.75, fontSize: "0.9rem" }}
+                      className="flex-grow-1"
+                    >
+                      {course.description?.slice(0, 90)}...
+                    </p>
 
-                    {/* Instructor Avatar (Image 2) */}
-                    <div className="d-flex align-items-center mb-3">
-                      <Image
-                        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                        roundedCircle
-                        width={35}
-                        height={35}
-                        className="me-2"
-                      />
-                      <small className="text-muted">
-                        Instructor
-                      </small>
-                    </div>
-
-                    <div className="fw-bold text-primary mb-3">
+                    {/* PRICE */}
+                    <div className="fw-bold text-info mb-3">
                       Rs. {course.price || 0}
                     </div>
 
-                    <div className="mt-auto">
+                    {/* ACTIONS */}
+                    <div className="d-flex gap-2 flex-wrap">
 
                       <Button
-                        variant="dark"
                         size="sm"
-                        className="me-2"
+                        variant="light"
+                        className="rounded-pill px-3"
                         onClick={() =>
-                          navigate(`/instructor/edit-course/${course._id}`)
+                          navigate(
+                            `/instructor/edit-course/${course._id}`
+                          )
                         }
                       >
                         Edit
                       </Button>
 
                       <Button
-                        variant="secondary"
                         size="sm"
-                        className="me-2"
+                        variant="outline-light"
+                        className="rounded-pill px-3"
                         onClick={() =>
-                          navigate(`/lessons/create-lesson/${course._id}`)
+                          navigate(
+                            `/lessons/create-lesson/${course._id}`
+                          )
                         }
                       >
-                        Add Lesson
+                        + Lesson
                       </Button>
 
                       <Button
-                        variant="danger"
                         size="sm"
+                        variant="danger"
+                        className="rounded-pill px-3"
                         onClick={() => handleDelete(course._id)}
                       >
                         Delete
@@ -181,15 +207,12 @@ const ManageCourses = () => {
                     </div>
 
                   </Card.Body>
-
                 </Card>
 
               </Col>
-
             ))}
 
           </Row>
-
         )}
 
       </Container>

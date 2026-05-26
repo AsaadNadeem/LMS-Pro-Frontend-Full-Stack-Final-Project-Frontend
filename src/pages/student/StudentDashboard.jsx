@@ -1,89 +1,167 @@
-
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const StudentDashboard = ({ user }) => {
   return (
-    <Container className="py-5">
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg,#0f172a,#1e293b,#0f172a)",
+        paddingTop: "40px",
+        paddingBottom: "40px",
+      }}
+    >
+      <Container>
 
-      {/* Welcome Section */}
-      <div className="text-center mb-5">
-        <h2 className="fw-bold">Welcome, {user.name}</h2>
-        <p className="text-muted">
-          Manage your courses and account settings from your dashboard
-        </p>
-      </div>
+        {/* ===== HERO SECTION ===== */}
+        <div
+          className="text-center mb-5"
+          style={{ color: "white" }}
+        >
+          <h1 className="fw-bold mb-2">
+            Welcome back, {user?.name}
+          </h1>
 
-      <Row className="g-4">
+          <p style={{ opacity: 0.8 }}>
+            Your learning space is ready. Continue where you left off.
+          </p>
+        </div>
 
-        {/* My Courses */}
-        <Col md={4}>
-          <Card className="border-0 shadow-sm text-center h-100 p-4 rounded-4">
-            <Card.Body className="d-flex flex-column">
-              <Card.Title className="fw-semibold mb-3">
-                My Courses
-              </Card.Title>
+        {/* ===== DASHBOARD CARDS ===== */}
+        <Row className="g-4 justify-content-center">
 
-              <Card.Text className="text-muted flex-grow-1">
-                View all your enrolled courses and continue learning.
-              </Card.Text>
+          {/* MY COURSES */}
+          <Col md={4}>
+            <Card
+              className="border-0 h-100"
+              style={{
+                background: "rgba(255,255,255,0.08)",
+                backdropFilter: "blur(12px)",
+                borderRadius: "18px",
+                color: "white",
+                transition: "0.3s",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.transform = "translateY(-8px)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.transform = "translateY(0px)")
+              }
+            >
+              <Card.Body className="text-center p-4">
 
-              <Link
-                to="/my-courses"
-                className="btn btn-dark mt-3"
-              >
-                Go
-              </Link>
-            </Card.Body>
-          </Card>
-        </Col>
+                <div style={{ fontSize: "40px" }}>📚</div>
 
-        {/* Profile */}
-        <Col md={4}>
-          <Card className="border-0 shadow-sm text-center h-100 p-4 rounded-4">
-            <Card.Body className="d-flex flex-column">
-              <Card.Title className="fw-semibold mb-3">
-                Profile
-              </Card.Title>
+                <h5 className="fw-bold mt-3">My Learning</h5>
 
-              <Card.Text className="text-muted flex-grow-1">
-                Update your personal details and account information.
-              </Card.Text>
+                <p style={{ opacity: 0.8 }}>
+                  Access your enrolled courses and continue learning anytime.
+                </p>
 
-              <Link
-                to="/update-user-details"
-                className="btn btn-dark mt-3"
-              >
-                Go
-              </Link>
-            </Card.Body>
-          </Card>
-        </Col>
+                <Button
+                  as={Link}
+                  to="/my-courses"
+                  variant="light"
+                  className="fw-semibold px-4 rounded-pill mt-2"
+                >
+                  Open
+                </Button>
 
-        {/* Change Password */}
-        <Col md={4}>
-          <Card className="border-0 shadow-sm text-center h-100 p-4 rounded-4">
-            <Card.Body className="d-flex flex-column">
-              <Card.Title className="fw-semibold mb-3">
-                Change Password
-              </Card.Title>
+              </Card.Body>
+            </Card>
+          </Col>
 
-              <Card.Text className="text-muted flex-grow-1">
-                Keep your account secure by updating your password.
-              </Card.Text>
+          {/* PROFILE */}
+          <Col md={4}>
+            <Card
+              className="border-0 h-100"
+              style={{
+                background: "rgba(255,255,255,0.08)",
+                backdropFilter: "blur(12px)",
+                borderRadius: "18px",
+                color: "white",
+                transition: "0.3s",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.transform = "translateY(-8px)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.transform = "translateY(0px)")
+              }
+            >
+              <Card.Body className="text-center p-4">
 
-              <Link
-                to="/change-password"
-                className="btn btn-dark mt-3"
-              >
-                Go
-              </Link>
-            </Card.Body>
-          </Card>
-        </Col>
+                <div style={{ fontSize: "40px" }}>👤</div>
 
-      </Row>
-    </Container>
+                <h5 className="fw-bold mt-3">Profile Center</h5>
+
+                <p style={{ opacity: 0.8 }}>
+                  Update your personal details and account settings.
+                </p>
+
+                <Button
+                  as={Link}
+                  to="/update-user-details"
+                  variant="light"
+                  className="fw-semibold px-4 rounded-pill mt-2"
+                >
+                  Edit
+                </Button>
+
+              </Card.Body>
+            </Card>
+          </Col>
+
+          {/* CHANGE PASSWORD */}
+          <Col md={4}>
+            <Card
+              className="border-0 h-100"
+              style={{
+                background: "rgba(255,255,255,0.08)",
+                backdropFilter: "blur(12px)",
+                borderRadius: "18px",
+                color: "white",
+                transition: "0.3s",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.transform = "translateY(-8px)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.transform = "translateY(0px)")
+              }
+            >
+              <Card.Body className="text-center p-4">
+
+                <div style={{ fontSize: "40px" }}>🔐</div>
+
+                <h5 className="fw-bold mt-3">Security</h5>
+
+                <p style={{ opacity: 0.8 }}>
+                  Keep your account safe by updating your password.
+                </p>
+
+                <Button
+                  as={Link}
+                  to="/change-password"
+                  variant="light"
+                  className="fw-semibold px-4 rounded-pill mt-2"
+                >
+                  Update
+                </Button>
+
+              </Card.Body>
+            </Card>
+          </Col>
+
+        </Row>
+
+        {/* ===== FOOTER NOTE ===== */}
+        <div className="text-center mt-5" style={{ color: "white", opacity: 0.6 }}>
+          <small>Student Dashboard • LMS Platform</small>
+        </div>
+
+      </Container>
+    </div>
   );
 };
 

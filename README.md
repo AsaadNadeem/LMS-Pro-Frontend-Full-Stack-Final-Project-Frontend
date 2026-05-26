@@ -1,110 +1,132 @@
-# Frontend - MERN Learning Management System
+# 🎓 MERN LMS — Frontend
 
-## Quick Start
+> React + Vite client for the MERN Learning Management System.
+> Supports three user roles: **Admin**, **Instructor**, and **Student**.
 
-### 1. Install Dependencies
+---
+
+## ⚡ Get Running in 3 Steps
+
 ```bash
+# 1. Install
 npm install
-```
 
-### 2. Configure Environment
-Environment is already configured in `.env`:
-- VITE_API_BASE_URL: http://localhost:8000/api
-
-✅ Backend API is automatically proxied during development
-
-### 3. Start Development Server
-```bash
+# 2. Start
 npm run dev
+
+# 3. Open
+# → http://localhost:5173
 ```
 
-Frontend runs on: **http://localhost:5173**
+> The `.env` file is pre-configured. No setup needed for local development.
+> Backend API calls are automatically proxied to `http://localhost:8000/api`.
 
-### 4. Build for Production
-```bash
-npm run build   # Creates optimized dist/ folder
-npm run preview # Preview production build locally
-```
+---
 
-## Project Structure
+## 📁 Source Structure
 
 ```
 src/
+│
+├── api/                    API client functions (Axios-based)
+├── context/                Auth context (React Context API)
+├── routes/                 Route definitions
+├── styles/                 Custom CSS
+│
 ├── components/
-│   ├── common/          - ConfirmModal, Loader, etc.
-│   ├── layout/          - Navbar, Sidebar, Footer
-│   └── roleRoutes/      - AdminRoute, InstructorRoute
-├── pages/
-│   ├── admin/           - Admin dashboard & management
-│   ├── instructor/      - Instructor dashboard & courses
-│   ├── student/         - Student courses & lessons
-│   └── public/          - Public pages (Home, Login, Register)
-├── api/                 - API client functions
-├── context/             - React Context (Auth)
-├── routes/              - Route definitions
-└── styles/              - Custom CSS
+│   ├── common/             Shared UI — ConfirmModal, Loader, etc.
+│   ├── layout/             Navbar, Sidebar, Footer
+│   └── roleRoutes/         AdminRoute, InstructorRoute guards
+│
+└── pages/
+    ├── admin/              Dashboard & user/course management
+    ├── instructor/         Course & lesson authoring
+    ├── student/            Enrollment & lesson viewing
+    └── public/             Home, Login, Register
 ```
 
-## Key Features
+---
 
-### Authentication
-- Register & Login
-- JWT token management
-- Protected routes by role
+## 🧩 Features at a Glance
 
-### User Roles
-- **Admin** - Manage users, courses, analytics
-- **Instructor** - Create & manage courses/lessons
-- **Student** - Enroll in courses, view lessons
+**Authentication**
+- Register / Login with JWT
+- Role-based protected routes
 
-### Components
-- Responsive Bootstrap UI
-- Chart.js for analytics
-- React Router for navigation
-- Axios for API calls
-- Toast notifications (react-toastify)
+**Three User Roles**
+
+| Role | Capabilities |
+|---|---|
+| Admin | Manage users, courses, view analytics |
+| Instructor | Create and manage courses & lessons |
+| Student | Browse, enroll, and view lessons |
+
+**UI & UX**
+- Responsive layout via Bootstrap 5
+- Analytics charts with Chart.js
+- Toast notifications via react-toastify
 - Loading skeleton screens
+- Client-side routing with React Router
 
-## Available Scripts
+---
+
+## 🛠 Scripts
 
 ```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run preview  # Preview production build
-npm run lint     # Check code quality
+npm run dev       # Start local dev server (http://localhost:5173)
+npm run build     # Compile optimized production bundle → dist/
+npm run preview   # Serve production build locally for testing
+npm run lint      # Run ESLint checks
 ```
 
-## Technologies
+---
 
-- **React 19** - UI framework
-- **Vite 7** - Build tool
-- **React Router 7** - Navigation
-- **Axios** - HTTP client
-- **Bootstrap 5** - UI framework
-- **Chart.js** - Analytics charts
-- **React Toastify** - Notifications
+## 🔧 Tech Stack
 
-## Environment Variables
+| Layer | Library / Tool |
+|---|---|
+| UI Framework | React 19 |
+| Build Tool | Vite 7 |
+| Routing | React Router 7 |
+| HTTP Client | Axios |
+| Styling | Bootstrap 5 |
+| Charts | Chart.js |
+| Notifications | React Toastify |
+
+---
+
+## 🌍 Environment
 
 ```env
+# .env
 VITE_API_BASE_URL=http://localhost:8000/api
 ```
 
-Change this when deploying to production.
+Update this value when deploying to production.
 
-## Troubleshooting
+---
 
-- Port 5173 in use? Vite uses next available port (5174, 5175, etc.)
-- API connection failed? Ensure backend is running on port 8000
-- Components not showing? Check browser console (F12) for errors
+## 🚀 Deployment
 
-## Deployment
+```bash
+npm run build   # Outputs to dist/
+```
 
-1. Build: `npm run build`
-2. Deploy `dist/` folder to:
-   - Vercel
-   - Netlify
-   - GitHub Pages
-   - Any static hosting
+Upload the `dist/` folder to any static host:
 
-3. Update `VITE_API_BASE_URL` to production API
+- **Vercel** — `vercel deploy`
+- **Netlify** — drag & drop or CLI
+- **GitHub Pages** — via `gh-pages` package
+- **Any static host** — upload `dist/` directly
+
+Then update `VITE_API_BASE_URL` in your production environment.
+
+---
+
+## 🩺 Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| Port 5173 already in use | Vite auto-selects next port (5174, 5175…) |
+| API calls failing | Make sure backend is running on port 8000 |
+| Components not rendering | Open DevTools (F12) and check the console |

@@ -108,5 +108,3 @@ Change this when deploying to production.
    - Any static hosting
 
 3. Update `VITE_API_BASE_URL` to production API
-
-For detailed setup, see [../SETUP_GUIDE.md](../SETUP_GUIDE.md)
